@@ -59,6 +59,11 @@ TEST_F(EmptyList, can_assign_two_empty_lists)
 	ASSERT_NO_THROW(l = l2);
 }
 
+TEST_F(EmptyList, can_assign_empty_list_to_itself)
+{
+	ASSERT_NO_THROW(l = l);
+}
+
 TEST_F(EmptyList, assign_two_empty_lists_is_correct)
 {
 	List l2;
@@ -75,15 +80,15 @@ TEST_F(EmptyList, can_insert_to_head_for_empty_list)
 
 TEST_F(EmptyList, can_insert_to_tail_for_empty_list)
 {
-	l.InsertToTail(5); //InserToTail
+	l.InsertToTail(5);
 	EXPECT_EQ(5, l.GetHead()->data);
 	EXPECT_EQ(NULL, l.GetHead()->next);
 }
 
-TEST_F(EmptyList, cant_insert_after_for_empty_list)
+TEST_F(EmptyList, cant_insert_after_for_empty_list) // исправленный тест
 {
 	Node* p = l.GetHead();
-	ASSERT_ANY_THROW(l.InsertAfter(p, 5)); //Не понимаю чт за тест
+	ASSERT_NO_THROW(l.InsertAfter(p, 5));
 }
 
 TEST_F(EmptyList, can_delete_from_empty_list)
@@ -201,6 +206,21 @@ TEST_F(ThreeNodesList, copy_of_not_empty_list_is_correct)
 	EXPECT_EQ(NULL, l2.GetHead()->next->next->next);
 }
 
+TEST_F(ThreeNodesList, copied_list_has_its_own_memory)
+{
+	List l2(l);
+	EXPECT_NE(l.GetHead(), l2.GetHead());
+	EXPECT_NE(l.GetHead()->next, l2.GetHead()->next);
+	EXPECT_NE(l.GetHead()->next->next, l2.GetHead()->next->next);
+}
+
+TEST_F(ThreeNodesList, not_empty_list_is_correct_after_assigning_to_itself)
+{
+	List l2(l);
+	l = l;
+	EXPECT_EQ(l2, l);
+}
+
 TEST_F(ThreeNodesList, size_of_not_empty_list_copy_is_correct)
 {
 	List l2(l);
@@ -223,15 +243,19 @@ TEST_F(ThreeNodesList, can_insert_to_tail_for_not_empty_list)
 
 TEST_F(ThreeNodesList, can_insert_after_null_ptr_for_not_empty_list)
 {
-
 	ASSERT_NO_THROW(l.InsertAfter(NULL, 5));
 }
 
-TEST_F(ThreeNodesList, insert_after_null_ptr_for_not_empty_list_is_correct)
+TEST_F(ThreeNodesList, insert_after_null_ptr_for_not_empty_list_is_correct) //исправленный тест
 {
 	List l2(l);
+	List l3;
+	l3.InsertToTail(1);
+	l3.InsertToTail(2);
+	l3.InsertToTail(3);
+	l3.InsertToTail(5);
 	l.InsertAfter(NULL, 5);
-	EXPECT_EQ(l2, l);
+	EXPECT_EQ(l3, l);
 }
 
 TEST_F(ThreeNodesList, can_insert_after_ptr_for_not_empty_list)
@@ -346,12 +370,28 @@ TEST_F(ThreeNodesList, not_empty_list_is_correct_after_inverse)
 	EXPECT_EQ(NULL, l.GetHead()->next->next->next);
 }
 
+TEST_F(ThreeNodesList, can_assign_not_empty_list_to_itself)
+{
+	ASSERT_NO_THROW(l = l);
+}
+
+
 TEST_F(ThreeNodesList, can_assign_two_not_empty_lists)
 {
 	List l2;
 	l2.InsertToTail(22);
 	l2.InsertToTail(33);
 	ASSERT_NO_THROW(l = l2);
+}
+
+TEST_F(ThreeNodesList, list_after_assign_has_its_own_memory)
+{
+	List l2;
+	l2.InsertToTail(22);
+	l2.InsertToTail(33);
+	l = l2;
+	EXPECT_NE(l.GetHead(), l2.GetHead());
+	EXPECT_NE(l.GetHead()->next, l2.GetHead()->next);
 }
 
 TEST_F(ThreeNodesList, can_assign_two_not_empty_lists_of_eq_size)
@@ -512,7 +552,6 @@ TEST_F(TwoListsTest, merge_after_null_ptr_for_not_empty_list_is_correct)
 {
 	List l3 = l.Merge(NULL, l2);
 	EXPECT_EQ(l, l3);
-	//ПОчемцу это должно совпадать??
 }
 
 

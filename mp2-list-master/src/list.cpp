@@ -23,7 +23,8 @@ List:: ~List() {
 
 
 List& List:: operator=(const List& list2) {
-	Clean();
+
+	if (list2.Head != Head)	Clean(); else return *this;
 	if (list2.Head != NULL) {
 		Node* ptr = list2.Head->next;
 		Head = new Node(list2.Head->data, NULL);
@@ -79,7 +80,7 @@ void List::InsertToTail(const DataType& d) {
 
 void List::InsertAfter(Node* node, const DataType& d) {
 	if (node == NULL) {
-		this->InsertToTail(d);
+		this->InsertToTail(d);  //throw "govno ";this->InsertToTail(d); 
 	}
 	else {
 		Node* ptr = Head;
